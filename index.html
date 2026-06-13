@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Claude Fable 5 Mastery Guide by Istab Maibam">
+    <title>CLAUDE FABLE 5 | ISTAB MAIBAM</title>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Inter:wght@300;400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #fdfcfb;
+            --dark: #080808;
+            --accent: #bc002d; /* Japanese Crimson */
+            --grey: #606060;
+            --border: rgba(0,0,0,0.1);
+            
+            /* Responsive Fluid Typography */
+            --step-0: clamp(1rem, 0.92rem + 0.39vw, 1.25rem); /* Body text */
+            --step-1: clamp(1.25rem, 1.09rem + 0.78vw, 1.75rem); /* Subheads */
+            --step-2: clamp(2.5rem, 1.5rem + 4.5vw, 6.5rem);    /* Main Title */
+            --step-3: clamp(1.75rem, 1.4rem + 2vw, 3.5rem);    /* Section Title */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--dark); 
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- LOADING SYSTEM --- */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--dark);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+
+        .loader-content { text-align: center; color: white; }
+        .loader-name {
+            font-family: 'Noto Serif JP', serif;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            letter-spacing: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+        .loader-jp {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 0.9rem;
+            color: var(--accent);
+            letter-spacing: 0.5rem;
+            margin-top: 20px;
+            opacity: 0.7;
+        }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 max(20px, 5vw);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px 80px;
+        }
+
+        /* --- DECORATIVE ELEMENTS --- */
+        .ver-line {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.6em;
+            color: #ccc;
+            text-transform: uppercase;
+            display: none; /* Mobile Hidden */
+        }
+
+        @media (min-width: 1200px) { .ver-line { display: block; } }
+
+        .hanko {
+            display: inline-block;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 4px 12px;
+            font-family: 'Noto Serif JP', serif;
+            font-weight: 900;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+
+        /* --- SECTIONS --- */
+        header {
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 1px solid var(--dark);
+            padding: 80px 0;
+        }
+
+        h1 {
+            font-family: 'Noto Serif JP', serif;
+            font-size: var(--step-2);
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            margin-bottom: 40px;
+        }
+
+        h1 span { color: var(--accent); }
+
+        section {
+            padding: clamp(60px, 10vw, 150px) 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-family: 'Noto Serif JP', serif;
+            font-size: var(--step-3);
+            line-height: 1.1;
+            margin-bottom: 40px;
+        }
+
+        h3 {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        p {
+            font-size: var(--step-0);
+            margin-bottom: 1.5rem;
+            color: #2a2a2a;
+            max-width: 65ch;
+        }
+
+        /* --- PROMPT & CODE BLOCKS --- */
+        .prompt-card {
+            background: #000;
+            color: #efefef;
+            padding: clamp(20px, 5vw, 40px);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            border-left: 6px solid var(--accent);
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .capability-card {
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #e0e0e0;
+            transition: 0.3s;
+        }
+
+        .capability-card:hover {
+            border-color: var(--dark);
+            transform: translateY(-5px);
+        }
+
+        /* --- ASYNC NOTIFICATION BOX --- */
+        .note-callout {
+            background: #fff8f8;
+            border: 1px solid var(--accent);
+            padding: 30px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .note-callout::after {
+            content: "IMPORTANT";
+            position: absolute;
+            top: -12px; left: 20px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 10px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Noto Serif JP', serif;
+            font-size: clamp(2rem, 10vw, 5rem);
+            color: var(--accent);
+            letter-spacing: 0.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* --- ANIMATIONS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Cinematic Loader -->
+    <div id="loader">
+        <div class="loader-content">
+            <div class="loader-name">ISTAB MAIBAM</div>
+            <div class="loader-jp">最高位のプロトコル / 読み込み中</div>
+        </div>
+    </div>
+
+    <!-- Vertical Decoration -->
+    <div class="ver-line">CLAUDE FABLE 5 — MASTER GUIDE // 2025 EDITION</div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <header>
+            <div class="hanko">極秘</div>
+            <h1>CLAUDE<br><span>FABLE 5</span><br>PROTOCOL</h1>
+            <p style="font-weight: 700; letter-spacing: 1px; color: var(--grey);">
+                BEHAVIORAL DIFFERENCES & PROMPTING PATTERNS FOR CLAUDE 3.5 FABLE AND MYTHOS.
+            </p>
+        </header>
+
+        <!-- Section 1: Intro -->
+        <section class="reveal">
+            <span class="label">// 01_OVERVIEW</span>
+            <div class="grid-2">
+                <div>
+                    <h2>The Evolution of Intelligence</h2>
+                    <p>Claude Fable 5 takes on problems that were previously too complex, long-running, or ambiguous. It is effective at end-to-end work that takes a person hours, days, or weeks to complete.</p>
+                </div>
+                <div class="note-callout">
+                    <p style="margin:0; font-size: 0.9rem;"><strong>Cyber-Security Notice:</strong> Safety classifiers target offensive techniques. Benign work may trigger refusals. Configure client-side fallback to Opus 4.8 for automated routing.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Capabilities -->
+        <section class="reveal">
+            <span class="label">// 02_CAPABILITIES</span>
+            <h2>Core Improvements</h2>
+            <div class="grid-2" style="gap: 20px;">
+                <div class="capability-card">
+                    <h3>Long-Horizon Autonomy</h3>
+                    <p>Sustains productive output over extended periods with strong instruction retention across complex tasks.</p>
+                </div>
+                <div class="capability-card">
+                    <h3>First-Shot Correctness</h3>
+                    <p>Reliable single-pass implementations of systems that previously took days of iteration.</p>
+                </div>
+                <div class="capability-card">
+                    <h3>Vision & Ambiguity</h3>
+                    <p>Interprets dense technical images and navigates multi-threaded requests with high precision.</p>
+                </div>
+                <div class="capability-card">
+                    <h3>Delegation</h3>
+                    <p>Dependably manages parallel subagents and sustains ongoing communication between peers.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Longer Turns -->
+        <section class="reveal">
+            <span class="label">// 03_TURN_MANAGEMENT</span>
+            <h2>Longer Turns & Higher Effort</h2>
+            <p>Runs can extend for minutes or hours. Adjust client timeouts and use the <strong>Effort</strong> parameter as your primary control. Use the following logic to prevent over-planning:</p>
+            <div class="prompt-card">
+When you have enough information to act, act. Do not re-derive facts already established in the conversation. If you are weighing a choice, give a recommendation, not an exhaustive survey. This does not apply to thinking blocks.</div>
+            
+            <h3>Unrequested Tidying</h3>
+            <p>Higher effort can lead to refactoring. Use this to maintain focus:</p>
+            <div class="prompt-card">
+Don't add features, refactor, or introduce abstractions beyond what the task requires. Trust internal code guarantees. Only validate at system boundaries. Do the simplest thing that works well.</div>
+        </section>
+
+        <!-- Section 4: Instruction Steering -->
+        <section class="reveal">
+            <span class="label">// 04_STEERING</span>
+            <h2>Strong Instruction Following</h2>
+            <p>Brevity is now a steering tool. Use short instructions rather than enumerating every behavior.</p>
+            <div class="prompt-card">
+Lead with the outcome. Your first sentence should answer "what happened." Supporting detail comes after. Being readable and being concise are different things; readability matters more.</div>
+            
+            <h3>Checkpointing</h3>
+            <p>Stop only where input is vital to progress:</p>
+            <div class="prompt-card">
+Pause for the user only when the work genuinely requires them: a destructive or irreversible action, a real scope change, or input only they can provide.</div>
+        </section>
+
+        <!-- Section 5: Long Run Grounding -->
+        <section class="reveal">
+            <span class="label">// 05_AUTONOMY</span>
+            <h2>Grounding & Boundaries</h2>
+            <p>Eliminate fabricated status reports by instructing the model to audit itself against tool results:</p>
+            <div class="prompt-card">
+Before reporting progress, audit each claim against a tool result from this session. Only report work you can point to evidence for. If something is not yet verified, say so explicitly.</div>
+        </section>
+
+        <!-- Section 6: Memory System -->
+        <section class="reveal">
+            <span class="label">// 06_MEMORY</span>
+            <h2>Record lessons in a persistent system</h2>
+            <div class="grid-2">
+                <div>
+                    <p>Claude Fable 5 performs best when recording lessons from previous runs. Provide a Markdown file for notes.</p>
+                </div>
+                <div class="prompt-card" style="margin:0;">
+Store one lesson per file with a one-line summary. Record corrections and confirmed approaches. Update existing notes rather than creating duplicates.</div>
+            </div>
+        </section>
+
+        <!-- Section 7: Send-to-User Tool -->
+        <section class="reveal">
+            <span class="label">// 07_SYSTEM_TOOLS</span>
+            <h2>The 'Send-to-User' Protocol</h2>
+            <p>For asynchronous agents, define a tool to surface verbatim content mid-task without ending the turn.</p>
+            <div class="prompt-card">
+{
+  "name": "send_to_user",
+  "description": "Display a message directly to the user verbatim.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "message": { "type": "string" }
+    }
+  }
+}</div>
+        </section>
+
+        <!-- Section 8: Final Recommendations -->
+        <section class="reveal" style="border:none;">
+            <span class="label">// 08_SCAFFOLDING</span>
+            <h2>Summary of Best Practices</h2>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 20px;"><strong>→ Start at the Difficulty Ceiling:</strong> Pick a task harder than what you assigned to prior models.</li>
+                <li style="margin-bottom: 20px;"><strong>→ Make Verification Explicit:</strong> Separate, fresh-context verifier subagents tend to outperform self-critique.</li>
+                <li style="margin-bottom: 20px;"><strong>→ Remove Reasoning Echoes:</strong> Do not instruct Claude to transcribe internal reasoning as text; read structured thinking blocks instead.</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="hanko" style="border-color: white; color: white;">完</div>
+        <div class="footer-logo">ISTAB MAIBAM</div>
+        <p style="font-family: 'Space Mono', monospace; font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px;">
+      
+        </p>
+    </footer>
+
+    <script>
+        // Cinematic Loader Timeline
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.transform = 'translateY(-100%)';
+            }, 1800);
+        });
+
+        // Intersection Observer for Scroll Reveal
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
